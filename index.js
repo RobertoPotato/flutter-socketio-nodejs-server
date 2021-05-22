@@ -15,13 +15,24 @@ app.get('/', (req, res) => {
 io.on('connection', function (socket) {
   console.log('A user has just connected'); // Prints to console upon new user connections
 
-  // Receive the emitted counter event from flutter app
   socket.on('counter', function (msg) {
-    // Log the message associated with the event on the console
     console.log(msg);
-
-    // As a response, emit the same message to connected sockets
     io.emit('counterResponse', msg);
+  });
+
+  socket.on('typing', function (data) {
+    console.log(`TYPING ${data}`);
+    io.emit('typing', data);
+  });
+
+  socket.on('message', function (data) {
+    console.log(`MESSAGE RECEIVED ${data}`);
+    io.emit('message', data);
+  });
+
+  socket.on('disconnect', function () {
+    console.log('A user has disconnected...', client.id);
+    // handleDisconnect()
   });
 
   // .. More events can come here ..
